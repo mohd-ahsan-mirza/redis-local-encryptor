@@ -138,7 +138,6 @@ class Crypt:
 # Change functions, add, get, _get_hash_of_key
 #def exportData(self)
 #def importData(self)
-#def command_list(self)
 
 
 #setup.sh
