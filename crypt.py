@@ -38,10 +38,12 @@ class Crypt:
     def _setHash(self,new_hash):
         self.hash = str(new_hash)
         self._print(inspect.currentframe().f_code.co_name,new_hash)
-    def _validate(self,key):
+    def _get_hash_of_key(self,key):
         value = self._decrypt(self._get(key))
         self._print(inspect.currentframe().f_code.co_name,value,"Function returns true when hash is appended to the decoded string")
-        return (self.hash == value[0:len(self.hash)]) 
+        return value[0:len(self.hash)]
+    def _validate(self,key):
+        return (self.hash == self._get_hash_of_key(key))
     def _get(self,key):
         if(self.redis.exists(key)):
             result = self.redis.get(key)
@@ -73,51 +75,74 @@ class Crypt:
         self._print(inspect.currentframe().f_code.co_name,result)
         return result
     def add(self,key,value):
+        #TODO
         value = self.hash + value
         result = self.redis.set(key,self._encrypt(value))
         self._print(inspect.currentframe().f_code.co_name,result)
         return result
     def get(self,key):
         value = self._decrypt(self._get(key))
+        #TODO
         value = value[len(self.hash):]
         self._print(inspect.currentframe().f_code.co_name,value)
         return value
-    #def updateKey(self)
-    #def deleteKey(self)
-    #def update_hash_on_all(self)
-    #def inspect_hash_discrepancies(self)
-    #def _update_hash_warning(self)
-    #def master_key_hint(self)
-    #def get_hash_using_master_key(self)
-    #def command_list(self)
-    #def exportData(self)
-    #def importData(self)
-    
-#unitTesting
+    def update(self,key,value):
+        #TODO: Validate hash
+        if(self.redis.exists(key)):
+            self.add(key,value)
+        else:
+            print("No key exists -> "+str(key))
+    def delete(self,key):
+        #TODO: Validate hash
+        if(self.redis.exists(key)):
+            self.redis.delete(key)
+        else:
+            print("No key exists -> "+str(key))
+    def hash_discrepancy(self):
+        result = []
+        for key in self.find_keys("*"):
+            if not self._validate(key):
+                result.append(key)
+        return result
+    def update_hash_on_all(self,new_hash):
+        if(len(self.hash_discrepancy())):
+            return False
+        else:
+            keys = self.find_keys("*")
+            keys_values = {}
+            for key in keys:
+                if not self._validate(key):
+                    return False
+            for key in keys:
+                keys_values[key] = self.get(key)
+            self._setHash(new_hash)
+            for key in keys:
+                self.update(key,keys_values[key])
+            return True
+    def list_commands(self):
+        return [
+            "crypt -hash {Hash} -add --key {KEY} --value '{VALUE}' {{-debug}}",
+            "crypt -hash {HASH} -get {KEY} {{-debug}}",
+            "crypt -hash {HASH} -find '{KEY_PATTERN}' {{-debug}}",
+            "crypt -hash {HASH} -update --key {KEY} --value '{VALUE}' {{-debug}}",
+            "crypt -hash {HASH} -update --hash '{new hash}' {{--debug}}",
+            "crypt -hash {HASH} -delete {KEY} {{-debug}}",
+            "crypt -hash {HASH} -inspect --hash {{-debug}}",
+            "crypt -hash {HASH} -list"
+
+        ]
+
+#TODO
+# Add unit test. Connect to a different db for testing
+#crypt -test
+# Change functions, add, get, _get_hash_of_key
+#def exportData(self)
+#def importData(self)
+#def command_list(self)
+
+
 #setup.sh
-
-#crypt -hash {Hash} -add --key {KEY} --value {VALUE} {{-debug}}
-#crypt -hash {HASH} -get {KEY} {{-debug}}
-#crypt -hash {HASH} -find {KEY_PATTERN} {{-debug}}
-
-#Installation
 #Pull the repo
 #Install redis locally
 #Start the redis server
 #Install python3 redis package
-
-
-#crypt = Crypt(123,debug=True)
-
-#encrypted_value = crypt._encrypt('something')
-#print(encrypted_value)
-#crypt._setHash(123)
-#decrypted_value = crypt._decrypt(encrypted_value)
-#print(decrypted_value)
-
-#crypt.add('uat-pass','76654534g3')
-#crypt._setHash(123)
-#crypt.get('uat-pass')
-
-#crypt.find_keys('*uat*')
-#crypt.get('uat-passwo')
