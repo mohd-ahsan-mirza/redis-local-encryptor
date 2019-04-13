@@ -1,5 +1,3 @@
-#Python, Redis, Shell
-
 import sys
 import redis
 import base64
@@ -50,15 +48,28 @@ class Crypt:
             self._print(inspect.currentframe().f_code.co_name,result)
             return result
         else:
-            self._print(inspect.currentframe().f_code.co_name,key,"KEY DOESN'T EXIST\n",True)
-            sys.exit(1)
+            matching_keys = self.find_keys("*"+str(key)+"*")
+            if(len(matching_keys)):
+                if(len(matching_keys)) > 1:
+                    self._print(inspect.currentframe().f_code.co_name,matching_keys,"TOO MANY MATCHING KEY PATTERNS\n",True)
+                    sys.exit(1)
+                else:
+                    print("Warning!! The exact key was not found. Returning value of closest matching key:"+str(matching_keys[0]))
+                    result = self.redis.get(matching_keys[0])
+                    self._print(inspect.currentframe().f_code.co_name,result)
+                    return result
+            else:
+                self._print(inspect.currentframe().f_code.co_name,key,"KEY DOESN'T EXIST\n",True)
+                sys.exit(1)
     def _print(self,function_name,value,message="",force_print=False):
         if(self._debug or force_print):
             if(len(message)):
                 message = ", Message -> "+message
             print("FUNCTION-> "+function_name+", RESULT-> "+str(value)+message)
-    def _get_all_keys(self):
-        result = self.redis.keys()
+    def find_keys(self,pattern):
+        result = []
+        for key in self.redis.scan_iter(pattern):
+            result.append(key)
         self._print(inspect.currentframe().f_code.co_name,result)
         return result
     def add(self,key,value):
@@ -73,13 +84,30 @@ class Crypt:
         return value
     #def updateKey(self)
     #def deleteKey(self)
-    #def _export(self)
+    #def update_hash_on_all(self)
+    #def inspect_hash_discrepancies(self)
+    #def _update_hash_warning(self)
+    #def master_key_hint(self)
+    #def get_hash_using_master_key(self)
+    #def command_list(self)
     #def exportData(self)
     #def importData(self)
     
 #unitTesting
+#setup.sh
 
-crypt = Crypt(123,debug=True)
+#crypt -hash {Hash} -add --key {KEY} --value {VALUE} {{-debug}}
+#crypt -hash {HASH} -get {KEY} {{-debug}}
+#crypt -hash {HASH} -find {KEY_PATTERN} {{-debug}}
+
+#Installation
+#Pull the repo
+#Install redis locally
+#Start the redis server
+#Install python3 redis package
+
+
+#crypt = Crypt(123,debug=True)
 
 #encrypted_value = crypt._encrypt('something')
 #print(encrypted_value)
@@ -89,6 +117,7 @@ crypt = Crypt(123,debug=True)
 
 #crypt.add('uat-pass','76654534g3')
 #crypt._setHash(123)
-crypt.get('uat-pass')
+#crypt.get('uat-pass')
 
-#crypt._get_all_keys()
+#crypt.find_keys('*uat*')
+#crypt.get('uat-passwo')
