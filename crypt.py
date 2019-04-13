@@ -133,9 +133,11 @@ class Crypt:
         ]
 
 #TODO
+#Fix delete and update
 # Add unit test. Connect to a different db for testing
 #crypt -test
 # Change functions, add, get, _get_hash_of_key
+#crypt -hash {HASH} -update --key {KEY}
 #def exportData(self)
 #def importData(self)
 
