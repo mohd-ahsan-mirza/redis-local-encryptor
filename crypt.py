@@ -138,6 +138,9 @@ class Crypt:
 #crypt -test
 # Change functions, add, get, _get_hash_of_key
 #crypt -hash {HASH} -update --key {KEY}
+#Master key. Stop if master key is not found
+#Scheculed backup every day. Store date from latest file when key doesn't exist
+#Email the backup to the work email. New class. Set option to use. Email or dropbox
 #def exportData(self)
 #def importData(self)
 
