@@ -36,14 +36,21 @@ class Crypt:
         self._print(inspect.currentframe().f_code.co_name,decoded_string)
         return decoded_string
     def _setHash(self,new_hash):
-        self.hash = str(new_hash)
+        self.hash = str(new_hash) + "-"
         self._print(inspect.currentframe().f_code.co_name,new_hash)
     def _get_hash_of_key(self,key):
         value = self._decrypt(self._get(key))
         self._print(inspect.currentframe().f_code.co_name,value,"Function returns true when hash is appended to the decoded string")
         return value[0:len(self.hash)]
-    def _validate(self,key):
-        return (self.hash == self._get_hash_of_key(key))
+    def _validate(self,key,shudown=True):
+        self._print(inspect.currentframe().f_code.co_name,self.hash,"Hash provided")
+        self._print(inspect.currentframe().f_code.co_name,self._get_hash_of_key(key),"Hash of key")
+        result = (self.hash == self._get_hash_of_key(key))
+        if not result:
+            if shudown:
+                print("Error!! The hash provided doesn't match. Shutting down")
+                sys.exit(1)
+        return result
     def _get(self,key):
         if(self.redis.exists(key)):
             result = self.redis.get(key)
@@ -86,14 +93,14 @@ class Crypt:
         value = value[len(self.hash):]
         self._print(inspect.currentframe().f_code.co_name,value)
         return value
-    def update(self,key,value):
-        #TODO: Validate hash
+    def update(self,key,value,ignoreValidate):
+        self._validate(key)
         if(self.redis.exists(key)):
             self.add(key,value)
         else:
             print("No key exists -> "+str(key))
     def delete(self,key):
-        #TODO: Validate hash
+        self._validate(key)
         if(self.redis.exists(key)):
             self.redis.delete(key)
         else:
@@ -101,7 +108,7 @@ class Crypt:
     def hash_discrepancy(self):
         result = []
         for key in self.find_keys("*"):
-            if not self._validate(key):
+            if not self._validate(key,False):
                 result.append(key)
         return result
     def update_hash_on_all(self,new_hash):
@@ -111,13 +118,12 @@ class Crypt:
             keys = self.find_keys("*")
             keys_values = {}
             for key in keys:
-                if not self._validate(key):
-                    return False
+                self._validate(key)
             for key in keys:
                 keys_values[key] = self.get(key)
             self._setHash(new_hash)
             for key in keys:
-                self.update(key,keys_values[key])
+                self.add(key,keys_values[key])
             return True
     def list_commands(self):
         return [
@@ -133,17 +139,13 @@ class Crypt:
         ]
 
 #TODO
-#Fix delete and update
-# Add unit test. Connect to a different db for testing
-#crypt -test
-# Change functions, add, get, _get_hash_of_key
-#crypt -hash {HASH} -update --key {KEY}
-#Master key. Stop if master key is not found
+#crypt -hash {HASH} -update --key {old KEY} --new-key {new key}
 #Scheculed backup every day. Store date from latest file when key doesn't exist
 #Email the backup to the work email. New class. Set option to use. Email or dropbox
 #def exportData(self)
 #def importData(self)
 
+#Use pin
 
 #setup.sh
 #Pull the repo
