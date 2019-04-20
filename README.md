@@ -61,7 +61,8 @@ Update key using an existing key provided
 ```
 crypt -update --key {KEY} --new-key {NEW_KEY} {{--debug}} {{--test}}
 ```
-Update hash on all keys. WARNING: Not recommended
+Update hash on all keys. 
+### WARNING: Not recommended
 ```
 crypt -update --hash {NEW_HASH} {{--debug}} {{--test}}
 ```
