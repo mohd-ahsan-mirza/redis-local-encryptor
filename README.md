@@ -1,5 +1,5 @@
 # Project
-A simple command line tool to manage sensitive information such as passwords using redis and python. 
+A simple command line tool to manage sensitive information such as passwords using redis and python. I built this tool because I got tired of copy pasting passwords when accessing remote servers
 # Prerequisites
 * Python3
 * Redis-cli
