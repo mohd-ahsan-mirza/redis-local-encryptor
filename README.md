@@ -23,6 +23,10 @@ CD to the project and then run the following command
 ```
 mkdir .backup
 ```
+## Step 5
+[Add your first value](https://github.com/mohd-ahsan-mirza/redis-local-encryptor#add)
+## Step 6
+[Create your first backup file](https://github.com/mohd-ahsan-mirza/redis-local-encryptor#backup)
 # Notes
 ## Note 1
 This tool is not meant to replace traditional methods of storing sensitive info. Please use last pass in conjunction with this tool
