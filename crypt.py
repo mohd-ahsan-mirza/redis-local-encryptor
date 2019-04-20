@@ -37,7 +37,7 @@ class Crypt:
         return decoded_string
     def _setHash(self,new_hash):
         self.hash = str(new_hash) + "-"
-        self._print(inspect.currentframe().f_code.co_name,new_hash)
+        self._print(inspect.currentframe().f_code.co_name,self.hash)
     def _get_hash_of_key(self,key):
         value = self._decrypt(self._get(key))
         self._print(inspect.currentframe().f_code.co_name,value,"Function returns true when hash is appended to the decoded string")
@@ -93,7 +93,7 @@ class Crypt:
         value = value[len(self.hash):]
         self._print(inspect.currentframe().f_code.co_name,value)
         return value
-    def update(self,key,value,ignoreValidate):
+    def update(self,key,value):
         self._validate(key)
         if(self.redis.exists(key)):
             self.add(key,value)
@@ -127,14 +127,14 @@ class Crypt:
             return True
     def list_commands(self):
         return [
-            "crypt -hash {Hash} -add --key {KEY} --value '{VALUE}' {{-debug}}",
-            "crypt -hash {HASH} -get {KEY} {{-debug}}",
-            "crypt -hash {HASH} -find '{KEY_PATTERN}' {{-debug}}",
-            "crypt -hash {HASH} -update --key {KEY} --value '{VALUE}' {{-debug}}",
-            "crypt -hash {HASH} -update --hash '{new hash}' {{--debug}}",
-            "crypt -hash {HASH} -delete {KEY} {{-debug}}",
-            "crypt -hash {HASH} -inspect --hash {{-debug}}",
-            "crypt -hash {HASH} -list"
+            "crypt -add --key {KEY} --value '{VALUE}' {{-debug}}",
+            "crypt -get {KEY} {{-debug}}",
+            "crypt -find '{KEY_PATTERN}' {{-debug}}",
+            "crypt -update --key {KEY} --value '{VALUE}' {{-debug}}",
+            "crypt -update --hash '{new hash}' {{--debug}}",
+            "crypt -delete {KEY} {{-debug}}",
+            "crypt -inspect --hash {{-debug}}",
+            "crypt -list"
 
         ]
 
