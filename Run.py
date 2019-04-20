@@ -2,17 +2,22 @@ import os
 from crypt import *
 import getpass
 
-hash = getpass.getpass(prompt='Hash: ')
-
-if(len(hash) == 0):
-    if sys.argv[1] not in ["-find","-list"]:
+hash = ""
+if sys.argv[1] not in ["-find","-list","-restore"]:
+    hash = getpass.getpass(prompt='Hash: ')
+    if(len(hash) == 0):
         print("No hash provided. Exiting")
         sys.exit()
+test = False
+if "--test" in sys.argv:
+    test = True
+    print("---TEST MODE ON----")
 debug = False
 if "--debug" in sys.argv:
     debug = True
+    print("---DEBUG MODE ON----")
 #Initialize class
-crypt = Crypt(hash,debug)
+crypt = Crypt(hash,debug,test)
 #Add
 if sys.argv[1] == "-add":
     if sys.argv[2] != "--key":
@@ -90,8 +95,26 @@ if sys.argv[1] == "-backup":
     if result:
         print("Backup created successfully")
     else:
-        print("There are keys that encrypted with a different hash")
+        print("There are keys that encrypted with a different hash. Please ensure consistency in hash")
     sys.exit()
+#Restore
+if sys.argv[1] == "-restore":
+    confirm_restore =  getpass.getpass(prompt='Value (Y/N):')
+    if confirm_restore == "Y":
+        if(sys.argv[2] == "--file"):
+            crypt.restore(sys.argv[3])
+        else:
+            crypt.restore()
+        print("Restore finished")
+    else:
+        print("Exiting")
+    sys.exit()
+#Flush
+if sys.argv[1] == "-flush":
+    if sys.argv[2] == "--test-data":
+        crypt.flush_test_data()
+        print("Test data flushed")
+        sys.exit()
 print("Arguments provided are not valid")
 sys.exit()
 

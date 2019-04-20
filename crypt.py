@@ -4,15 +4,22 @@ import base64
 import inspect
 import pickle
 import datetime
+import os
+import glob
 
 class Crypt:
-    def __init__(self,hash,debug=False):
-        self._initialize_redis_connection()
+    def __init__(self,hash,debug=False,test=False):
+        self._test = test
         self._debug = debug
         self._setHash(hash)
-    def _initialize_redis_connection(self):
+        self._initialize_redis_connection(0) #Main db
+        if self._test: 
+            self._initialize_redis_connection(1) #Test db
+            self.restore() #Restore from latest backup for testing
+    def _initialize_redis_connection(self,db_index):
+        self._print(inspect.currentframe().f_code.co_name,db_index,"DB Index")
         try:
-            self.redis = redis.StrictRedis(host="localhost", port=6379, charset="utf-8", decode_responses=True, db=0)
+            self.redis = redis.StrictRedis(host="localhost", port=6379, charset="utf-8", decode_responses=True, db=db_index)
         except:
             print("START REDIS LOCAL SERVER FIRST")
             sys.exit(1)
@@ -38,7 +45,7 @@ class Crypt:
         return decoded_string
     def _setHash(self,new_hash):
         self.hash = str(new_hash) + "-"
-        self._print(inspect.currentframe().f_code.co_name,self.hash)
+        #self._print(inspect.currentframe().f_code.co_name,self.hash)
     def _get_hash_of_key(self,key):
         value = self._decrypt(self._get(key))
         self._print(inspect.currentframe().f_code.co_name,value,"Function returns true when hash is appended to the decoded string")
@@ -128,29 +135,63 @@ class Crypt:
             return True
     def list_commands(self):
         return [
-            "crypt -add --key {KEY} --value '{VALUE}' {{-debug}}",
-            "crypt -get {KEY} {{-debug}}",
-            "crypt -find '{KEY_PATTERN}' {{-debug}}",
-            "crypt -update --key {KEY} --value '{VALUE}' {{-debug}}",
-            "crypt -update --key {KEY} --new-key {{new key}} {{--debug}}",
-            "crypt -update --hash '{new hash}' {{--debug}}",
-            "crypt -delete {KEY} {{-debug}}",
-            "crypt -inspect --hash {{-debug}}",
+            "crypt -add --key {KEY} --value '{VALUE}' {{--debug}} {{--test}}",
+            "crypt -get {KEY} {{--debug}} {{--test}}",
+            "crypt -find '{KEY_PATTERN}' {{--debug}} {{--test}}",
+            "crypt -update --key {KEY} --value '{VALUE}' {{--debug}} {{--test}}",
+            "crypt -update --key {KEY} --new-key {NEW_KEY} {{--debug}} {{--test}}",
+            "crypt -update --hash {NEW_HASH} {{--debug}} {{--test}}",
+            "crypt -delete {KEY} {{--debug}} {{--test}}",
+            "crypt -inspect --hash {{--debug}} {{--test}}",
+            "crypt -backup {{--debug}}",
+            "crypt -restore {{--file}} {{file}} {{--debug}} {{--test}}",
+            "crypt -flush --test-data {{--debug}}",
             "crypt -list"
         ]
     def backup(self):
+        if(self._test):
+            print("Warning!!! Can't backup in test mode")
+            sys.exit(1)
         if(len(self.hash_discrepancy())):
             return False
         else:
             keys = self.find_keys("*")
             keys_values = {}
             for key in keys:
-                keys_values[key] = self.get(key)
+                keys_values[key] = self._get(key)
             self._print(inspect.currentframe().f_code.co_name,keys_values)
-            pickle_out = open(".backup/backup"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+".pickle","wb")
+            file_name = ".backup/backup"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+".pickle"
+            self._print(inspect.currentframe().f_code.co_name,file_name,"File to be generated",True)
+            pickle_out = open(file_name,"wb")
             pickle.dump(keys_values, pickle_out)
             pickle_out.close()
             return True
+    def restore(self,selected_file=""):
+        directory = ".backup/"
+        if selected_file == "":
+            list_of_files = glob.glob(directory+"*")
+            latest_file = max(list_of_files, key=os.path.getctime)
+            selected_file = latest_file
+        else:
+            selected_file = directory + selected_file
+            if not os.path.isfile(selected_file):
+                print("FILE DOESN'T EXIST!! SHUTTING DOWN")
+                sys.exit(1)
+        self._print(inspect.currentframe().f_code.co_name,selected_file,"File selected")
+        pickle_in = open(selected_file,"rb")
+        data = pickle.load(pickle_in)
+        self._print(inspect.currentframe().f_code.co_name,data)
+        for key in data:
+            self.redis.set(key,data[key])
+    def flush_test_data(self):
+        self._initialize_redis_connection(1) #Test db
+        keys = self.find_keys("*")
+        self._print(inspect.currentframe().f_code.co_name,keys,"Keys in test db")
+        if len(keys) == 0:
+            return False
+        for key in keys:
+            self.redis.delete(key)
+        return True
             
 
             
