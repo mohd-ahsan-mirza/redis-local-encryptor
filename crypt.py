@@ -207,4 +207,4 @@ class Crypt:
         return True
             
 #TODO
-#Email the backup to the work email. New class. Set option to use. Email or dropbox
+#Email the backup to the work email. New class. Set option to use. Email or dropbox. Multithreading
