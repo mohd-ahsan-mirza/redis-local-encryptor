@@ -6,13 +6,15 @@ A simple command line tool to manage sensitive information such as passwords usi
 * Redis python package
 # Setup
 ## Step 1
+Pull the repo
+## Step 2
 Add the following line in your .bash_profile. Replace the path to the path where this project is pulled
 ```
 alias crypt='python3 {Absolute path of encryptor folder}/Run.py'
 ```
-## Step 2
-Ensure local redis server is running
 ## Step 3
+Ensure local redis server is running
+## Step 4
 CD to the project and then run the following command
 ```
 mkdir .backup

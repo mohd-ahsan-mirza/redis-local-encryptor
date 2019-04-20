@@ -208,11 +208,3 @@ class Crypt:
             
 #TODO
 #Email the backup to the work email. New class. Set option to use. Email or dropbox
-
-
-#setup.sh
-#Pull the repo
-#Install redis locally
-#Start the redis server
-#Install python3 redis package
-#mkdir .backup
