@@ -82,14 +82,12 @@ class Crypt:
         self._print(inspect.currentframe().f_code.co_name,result)
         return result
     def add(self,key,value):
-        #TODO
         value = self.hash + value
         result = self.redis.set(key,self._encrypt(value))
         self._print(inspect.currentframe().f_code.co_name,result)
         return result
     def get(self,key):
         value = self._decrypt(self._get(key))
-        #TODO
         value = value[len(self.hash):]
         self._print(inspect.currentframe().f_code.co_name,value)
         return value
@@ -140,12 +138,10 @@ class Crypt:
 
 #TODO
 #crypt -hash {HASH} -update --key {old KEY} --new-key {new key}
-#Scheculed backup every day. Store date from latest file when key doesn't exist
-#Email the backup to the work email. New class. Set option to use. Email or dropbox
 #def exportData(self)
 #def importData(self)
-
-#Use pin
+#Scheculed backup every day. Store date from latest file when key doesn't exist
+#Email the backup to the work email. New class. Set option to use. Email or dropbox
 
 #setup.sh
 #Pull the repo
