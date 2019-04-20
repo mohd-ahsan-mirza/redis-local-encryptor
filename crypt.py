@@ -209,6 +209,7 @@ class Crypt:
 #TODO
 #Email the backup to the work email. New class. Set option to use. Email or dropbox
 
+
 #setup.sh
 #Pull the repo
 #Install redis locally
