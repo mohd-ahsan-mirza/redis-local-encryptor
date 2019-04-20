@@ -2,6 +2,8 @@ import sys
 import redis
 import base64
 import inspect
+import pickle
+import datetime
 
 class Crypt:
     def __init__(self,hash,debug=False):
@@ -119,8 +121,6 @@ class Crypt:
             keys = self.find_keys("*")
             keys_values = {}
             for key in keys:
-                self._validate(key)
-            for key in keys:
                 keys_values[key] = self.get(key)
             self._setHash(new_hash)
             for key in keys:
@@ -138,7 +138,23 @@ class Crypt:
             "crypt -inspect --hash {{-debug}}",
             "crypt -list"
         ]
+    def backup(self):
+        if(len(self.hash_discrepancy())):
+            return False
+        else:
+            keys = self.find_keys("*")
+            keys_values = {}
+            for key in keys:
+                keys_values[key] = self.get(key)
+            self._print(inspect.currentframe().f_code.co_name,keys_values)
+            pickle_out = open(".backup/backup"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+".pickle","wb")
+            pickle.dump(keys_values, pickle_out)
+            pickle_out.close()
+            return True
+            
 
+            
+            
 #TODO
 #def exportData(self)
 #def importData(self)
@@ -150,3 +166,4 @@ class Crypt:
 #Install redis locally
 #Start the redis server
 #Install python3 redis package
+#mkdir .backup

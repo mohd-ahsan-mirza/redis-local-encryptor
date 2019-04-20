@@ -84,6 +84,14 @@ if sys.argv[1] == "-list":
     print("\n".join(result))
     print("----------------------------------------------------------------------")
     sys.exit()
+#Export
+if sys.argv[1] == "-backup":
+    result = crypt.backup()
+    if result:
+        print("Backup created successfully")
+    else:
+        print("There are keys that encrypted with a different hash")
+    sys.exit()
 print("Arguments provided are not valid")
 sys.exit()
 
