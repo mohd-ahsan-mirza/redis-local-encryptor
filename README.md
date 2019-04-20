@@ -2,7 +2,7 @@
 A simple command line tool to manage sensitive information such as passwords using redis and python. 
 # Notes
 ## Note 1
-This tool is not meant to replace traditional methods of storing methods. Please use last pass in conjunction with this tool
+This tool is not meant to replace traditional methods of storing sensitive info. Please use last pass in conjunction with this tool
 ## Note 2
 The hash consistency is very important. Please avoid using different hashes. Scheduled backups won't run if values are encrypted with different hashes
 ## Note 3
@@ -32,13 +32,14 @@ Denotes optional parameters commands take
 ```
  Denotes mandatory parameters
 # Commands
-## ADD
+## Add
 Adding a key and value
 ```
 crypt -add --key {KEY} --value '{VALUE}' {{--debug}} {{--test}}"
 ```
-## GET
+## Get
 Get the value for the key provided. If an exact key is not found, closest matching key is returned if there was only one match  
+### IMPORTANT: If successful, value returned is copied in the clipboard
 ```
 crypt -get {KEY} {{--debug}} {{--test}}
 ```
