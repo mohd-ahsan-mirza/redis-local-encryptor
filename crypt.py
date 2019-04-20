@@ -6,16 +6,20 @@ import pickle
 import datetime
 import os
 import glob
+import time
 
 class Crypt:
     def __init__(self,hash,debug=False,test=False):
         self._test = test
         self._debug = debug
         self._setHash(hash)
+        self.backup_directory = ".backup/"
         self._initialize_redis_connection(0) #Main db
         if self._test: 
             self._initialize_redis_connection(1) #Test db
             self.restore() #Restore from latest backup for testing
+        else:
+            self._initiate_backup()
     def _initialize_redis_connection(self,db_index):
         self._print(inspect.currentframe().f_code.co_name,db_index,"DB Index")
         try:
@@ -83,6 +87,18 @@ class Crypt:
             if(len(message)):
                 message = ", Message -> "+message
             print("FUNCTION-> "+function_name+", RESULT-> "+str(value)+message)
+    def _get_latest_from_backup(self):
+        list_of_files = glob.glob(self.backup_directory+"*")
+        return max(list_of_files, key=os.path.getctime)
+    def _initiate_backup(self):
+        now = time.time()
+        day_ago = now - 60*60*24
+        latest_file = self._get_latest_from_backup()
+        self._print(inspect.currentframe().f_code.co_name,latest_file,"Backup file selected")
+        file_creation_time = os.path.getctime(latest_file)
+        if file_creation_time < day_ago:
+            print("Initiating scheduled backup")
+            self.backup()
     def find_keys(self,pattern):
         result = []
         for key in self.redis.scan_iter(pattern):
@@ -167,13 +183,10 @@ class Crypt:
             pickle_out.close()
             return True
     def restore(self,selected_file=""):
-        directory = ".backup/"
         if selected_file == "":
-            list_of_files = glob.glob(directory+"*")
-            latest_file = max(list_of_files, key=os.path.getctime)
-            selected_file = latest_file
+            selected_file = self._get_latest_from_backup()
         else:
-            selected_file = directory + selected_file
+            selected_file = self.backup_directory + selected_file
             if not os.path.isfile(selected_file):
                 print("FILE DOESN'T EXIST!! SHUTTING DOWN")
                 sys.exit(1)
@@ -193,13 +206,8 @@ class Crypt:
             self.redis.delete(key)
         return True
             
-
-            
-            
 #TODO
-#def exportData(self)
-#def importData(self)
-#Scheculed backup every day. Store date from latest file when key doesn't exist
+#Scheculed backup every day
 #Email the backup to the work email. New class. Set option to use. Email or dropbox
 
 #setup.sh
