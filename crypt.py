@@ -33,7 +33,6 @@ class Crypt:
             encoded_c = chr((ord(value[i]) - ord(key_c) + 256) % 256)
             encoded_chars.append(encoded_c)
         decoded_string = ''.join(encoded_chars)
-        self._print(inspect.currentframe().f_code.co_name,decoded_string)
         return decoded_string
     def _setHash(self,new_hash):
         self.hash = str(new_hash) + "-"
@@ -97,6 +96,10 @@ class Crypt:
             self.add(key,value)
         else:
             print("No key exists -> "+str(key))
+    def update_key(self,key,new_key):
+        value = self.get(key)
+        self.delete(key)
+        self.add(new_key,value)
     def delete(self,key):
         self._validate(key)
         if(self.redis.exists(key)):
@@ -129,15 +132,14 @@ class Crypt:
             "crypt -get {KEY} {{-debug}}",
             "crypt -find '{KEY_PATTERN}' {{-debug}}",
             "crypt -update --key {KEY} --value '{VALUE}' {{-debug}}",
+            "crypt -update --key {KEY} --new-key {{new key}} {{--debug}}",
             "crypt -update --hash '{new hash}' {{--debug}}",
             "crypt -delete {KEY} {{-debug}}",
             "crypt -inspect --hash {{-debug}}",
             "crypt -list"
-
         ]
 
 #TODO
-#crypt -hash {HASH} -update --key {old KEY} --new-key {new key}
 #def exportData(self)
 #def importData(self)
 #Scheculed backup every day. Store date from latest file when key doesn't exist

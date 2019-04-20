@@ -5,8 +5,9 @@ import getpass
 hash = getpass.getpass(prompt='Hash: ')
 
 if(len(hash) == 0):
-    print("No hash provided. Exiting")
-    sys.exit()
+    if sys.argv[1] not in ["-find","-list"]:
+        print("No hash provided. Exiting")
+        sys.exit()
 debug = False
 if "--debug" in sys.argv:
     debug = True
@@ -17,10 +18,11 @@ if sys.argv[1] == "-add":
     if sys.argv[2] != "--key":
         print("No key argument provided")
         sys.exit()
-    if sys.argv[4] != "--value":
-        print("No Value argument provided")
+    value = getpass.getpass(prompt='Value: ')
+    if(len(value) == 0):
+        print("No value provided. Exiting")
         sys.exit()
-    crypt.add(sys.argv[3],sys.argv[5])
+    crypt.add(sys.argv[3],value)
     sys.exit()
 #Get
 if sys.argv[1] == "-get":
@@ -30,7 +32,9 @@ if sys.argv[1] == "-get":
 #Find
 if sys.argv[1] == "-find":
     result = crypt.find_keys(sys.argv[2])
+    print("----------------------------------------------------------------------")
     print("\n".join(result))
+    print("----------------------------------------------------------------------")
     sys.exit()
 #Update
 if sys.argv[1] == "-update":
@@ -50,9 +54,14 @@ if sys.argv[1] == "-update":
             print("No key argument provided")
             sys.exit()
         if sys.argv[4] != "--value":
-            print("No Value argument provided")
-            sys.exit()
-        crypt.update(sys.argv[3],sys.argv[5])
+            if sys.argv[4] != "--new-key":
+                print("No Value argument provided or New key argument provided")
+                sys.exit()
+            else:
+                crypt.update_key(sys.argv[3],sys.argv[5])
+                sys.exit()
+        else:
+            crypt.update(sys.argv[3],sys.argv[5])
     sys.exit()
 #Delete
 if sys.argv[1] == "-delete":
@@ -75,7 +84,7 @@ if sys.argv[1] == "-list":
     print("\n".join(result))
     print("----------------------------------------------------------------------")
     sys.exit()
-print("Agruments provided are not valid")
+print("Arguments provided are not valid")
 sys.exit()
 
 
