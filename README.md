@@ -6,27 +6,29 @@ This tool is not meant to replace traditional methods of storing sensitive info.
 ## Note 2
 The hash consistency is very important. Please avoid using different hashes. Scheduled backups won't run if values are encrypted with different hashes
 ## Note 3
-DB 0 is for app 
+### DON'T forget the hash you choose. You won't be able to retrieve it anyway if you forget
 ## Note 4
-DB 1 is for testing
+DB 0 is for app 
 ## Note 5
+DB 1 is for testing
+## Note 6
 ```
 --debug
 ```
 Turns on debug mode
-## Note 6
+## Note 7
 ```
 --test
 ```
 Turns on test mode. Connects to DB 1 and restores from the latest backup for testing
-## Note 7
-After every 24 hours, of the last backup file creation, whatever command will be ran will also trigger a backup
 ## Note 8
+After every 24 hours, of the last backup file creation, whatever command will be ran will also trigger a backup
+## Note 9
 ```
 {{}}
 ``` 
 Denotes optional parameters commands take
-## Note 9
+## Note 10
 ```
 {}
 ```
@@ -61,8 +63,8 @@ Update key using an existing key provided
 ```
 crypt -update --key {KEY} --new-key {NEW_KEY} {{--debug}} {{--test}}
 ```
-Update hash on all keys. 
 ### WARNING: Not recommended
+Update hash on all keys. 
 ```
 crypt -update --hash {NEW_HASH} {{--debug}} {{--test}}
 ```
