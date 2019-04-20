@@ -9,9 +9,9 @@ The hash consistency is very important. Please avoid using different hashes. Sch
 DB 0 is for app 
 ## Note 4
 DB 1 is for testing
-## Note 
+## Note 5
 {{}} Denotes optional parameters commands take
-## Note 
+## Note 6
 {} Denotes mandatory parameters
 # Commands
 ## ADD
