@@ -207,7 +207,6 @@ class Crypt:
         return True
             
 #TODO
-#Scheculed backup every day
 #Email the backup to the work email. New class. Set option to use. Email or dropbox
 
 #setup.sh
