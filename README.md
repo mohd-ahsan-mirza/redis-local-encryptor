@@ -1,5 +1,22 @@
 # Project
 A simple command line tool to manage sensitive information such as passwords using redis and python. 
+# Prerequisites
+* Python3
+* Redis-cli
+* Redis python package
+# Setup
+## Step 1
+Add the following line in your .bash_profile. Replace the path to the path where this project is pulled
+```
+alias crypt='python3 {Absolute path of encryptor folder}/Run.py'
+```
+## Step 2
+Ensure local redis server is running
+## Step 3
+CD to the project and then run the following command
+```
+mkdir .backup
+```
 # Notes
 ## Note 1
 This tool is not meant to replace traditional methods of storing sensitive info. Please use last pass in conjunction with this tool
