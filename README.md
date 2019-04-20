@@ -12,6 +12,10 @@ Add the following line in your .bash_profile. Replace the path to the path where
 ```
 alias crypt='python3 {Absolute path of encryptor folder}/Run.py'
 ```
+To load the changes
+```
+source ~/.bash_profile
+```
 ## Step 3
 Ensure local redis server is running
 ## Step 4
