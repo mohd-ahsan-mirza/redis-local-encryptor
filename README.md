@@ -61,7 +61,7 @@ Denotes optional parameters commands take
 ```
  Denotes mandatory parameters
 ## Note 11
-When adding or updating values, you might have to use double or single quotes depending if there are any special characters
+When adding or updating values, you might have to use double or single quotes for values depending if there are any special characters
 # Commands
 ## Add
 Adding a key and value
