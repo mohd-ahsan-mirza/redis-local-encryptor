@@ -13,7 +13,7 @@ class Crypt:
         self._test = test
         self._debug = debug
         self._setHash(hash)
-        self.backup_directory = ".backup/"
+        self.backup_directory = os.path.abspath(os.path.dirname(__file__)) + "/.backup/"
         self._initialize_redis_connection(0) #Main db
         if self._test: 
             self._initialize_redis_connection(1) #Test db
@@ -94,7 +94,7 @@ class Crypt:
         now = time.time()
         day_ago = now - 60*60*24
         latest_file = self._get_latest_from_backup()
-        self._print(inspect.currentframe().f_code.co_name,latest_file,"Backup file selected")
+        self._print(inspect.currentframe().f_code.co_name,latest_file,"Last backup file")
         file_creation_time = os.path.getctime(latest_file)
         if file_creation_time < day_ago:
             print("Initiating scheduled backup")
@@ -176,7 +176,7 @@ class Crypt:
             for key in keys:
                 keys_values[key] = self._get(key)
             self._print(inspect.currentframe().f_code.co_name,keys_values)
-            file_name = ".backup/backup"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+".pickle"
+            file_name = self.backup_directory+"backup"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+".pickle"
             self._print(inspect.currentframe().f_code.co_name,file_name,"File to be generated",True)
             pickle_out = open(file_name,"wb")
             pickle.dump(keys_values, pickle_out)
