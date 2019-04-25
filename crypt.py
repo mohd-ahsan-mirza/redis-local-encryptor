@@ -151,10 +151,10 @@ class Crypt:
             return True
     def list_commands(self):
         return [
-            "crypt -add --key {KEY} --value '{VALUE}' {{--debug}} {{--test}}",
+            "crypt -add --key {KEY} {{--debug}} {{--test}}",
             "crypt -get {KEY} {{--debug}} {{--test}}",
             "crypt -find '{KEY_PATTERN}' {{--debug}} {{--test}}",
-            "crypt -update --key {KEY} --value '{VALUE}' {{--debug}} {{--test}}",
+            "crypt -update --key {KEY} --value {{--debug}} {{--test}}",
             "crypt -update --key {KEY} --new-key {NEW_KEY} {{--debug}} {{--test}}",
             "crypt -update --hash {NEW_HASH} {{--debug}} {{--test}}",
             "crypt -delete {KEY} {{--debug}} {{--test}}",

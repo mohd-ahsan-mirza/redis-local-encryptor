@@ -66,7 +66,11 @@ if sys.argv[1] == "-update":
                 crypt.update_key(sys.argv[3],sys.argv[5])
                 sys.exit()
         else:
-            crypt.update(sys.argv[3],sys.argv[5])
+            update_key_value = getpass.getpass(prompt='New Value: ')
+            if(len(update_key_value) == 0):
+                print("No new hash provided. Exiting")
+                sys.exit()
+            crypt.update(sys.argv[3],update_key_value)
     sys.exit()
 #Delete
 if sys.argv[1] == "-delete":

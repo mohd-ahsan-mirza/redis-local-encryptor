@@ -64,9 +64,9 @@ Denotes optional parameters commands take
 When adding or updating values, you might have to use double or single quotes for values depending if there are any special characters
 # Commands
 ## Add
-Adding a key and value
+Adding a key and value.
 ```
-crypt -add --key {KEY} --value '{VALUE}' {{--debug}} {{--test}}"
+crypt -add --key {KEY} {{--debug}} {{--test}}"
 ```
 ## Get
 Get the value for the key provided. If an exact key is not found, closest matching key is returned if there was only one match  
@@ -84,9 +84,9 @@ Find keys matching pattern. Read redis documentation on pattern matching
 crypt -find '{KEY_PATTERN}' {{--debug}} {{--test}}
 ```
 ## Update
-Update value based on the key provided
+Update value based on the key provided. You will be prompted to enter value
 ```
-crypt -update --key {KEY} --value '{VALUE}' {{--debug}} {{--test}}
+crypt -update --key {KEY} --value {{--debug}} {{--test}}
 ```
 Update key using an existing key provided
 ```
