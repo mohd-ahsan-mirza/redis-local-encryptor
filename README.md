@@ -64,7 +64,7 @@ Denotes optional parameters commands take
 When adding or updating values, you might have to use double or single quotes for values depending if there are any special characters
 # Commands
 ## Add
-Adding a key and value.
+Adding a key and value. You will be prompted to enter value
 ```
 crypt -add --key {KEY} {{--debug}} {{--test}}"
 ```
