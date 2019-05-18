@@ -24,8 +24,12 @@ CD to the project and then run the following command
 mkdir .backup
 ```
 ## Step 5
-[Add your first value](https://github.com/mohd-ahsan-mirza/redis-local-encryptor#add)
+```
+touch .backup/placeholder
+```
 ## Step 6
+[Add your first value](https://github.com/mohd-ahsan-mirza/redis-local-encryptor#add)
+## Step 7
 [Create your first backup file](https://github.com/mohd-ahsan-mirza/redis-local-encryptor#backup)
 # Notes
 ## Note 1
@@ -62,6 +66,8 @@ Denotes optional parameters commands take
  Denotes mandatory parameters
 ## Note 11
 When adding or updating values, you might have to use double or single quotes for values depending if there are any special characters
+## Note 12
+Setup.sh file is for Mac OS. 
 # Commands
 ## Add
 Adding a key and value. You will be prompted to enter value
