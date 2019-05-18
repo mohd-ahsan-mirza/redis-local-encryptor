@@ -32,7 +32,10 @@ if sys.argv[1] == "-add":
 #Get
 if sys.argv[1] == "-get":
     result = crypt.get(sys.argv[2])
-    os.system("echo '%s' | pbcopy" % result)
+    if len(sys.argv) >= 4 and sys.argv[3] == "--return-value":
+        os.system("echo '%s'" % result)
+    else:
+        os.system("echo '%s' | pbcopy" % result)
     sys.exit()
 #Find
 if sys.argv[1] == "-find":

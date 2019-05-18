@@ -152,7 +152,7 @@ class Crypt:
     def list_commands(self):
         return [
             "crypt -add --key {KEY} {{--debug}} {{--test}}",
-            "crypt -get {KEY} {{--debug}} {{--test}}",
+            "crypt -get {KEY} {{--return-value}} {{--debug}} {{--test}}",
             "crypt -find '{KEY_PATTERN}' {{--debug}} {{--test}}",
             "crypt -update --key {KEY} --value {{--debug}} {{--test}}",
             "crypt -update --key {KEY} --new-key {NEW_KEY} {{--debug}} {{--test}}",
