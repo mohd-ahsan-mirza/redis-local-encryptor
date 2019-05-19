@@ -121,6 +121,8 @@ class Crypt:
             self.add(key,value)
         else:
             print("No key exists -> "+str(key))
+            self.add(key,value)
+            print("New key added")
     def update_key(self,key,new_key):
         value = self.get(key)
         self.delete(key)
