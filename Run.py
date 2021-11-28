@@ -2,12 +2,12 @@ import os
 from crypt import *
 import getpass
 
-#hash = ""
-#if sys.argv[1] not in ["-find","-list","-restore"]:
-hash = getpass.getpass(prompt='Hash: ')
-if(len(hash) == 0):
-    print("No hash provided. Exiting")
-    sys.exit()
+hash = ""
+if sys.argv[1] not in ["-find","-list","-restore"]:
+    hash = getpass.getpass(prompt='Hash: ')
+    if(len(hash) == 0):
+        print("No hash provided. Exiting")
+        sys.exit()
 test = False
 if "--test" in sys.argv:
     test = True
